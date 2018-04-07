@@ -1,8 +1,19 @@
 class Strigil
   def self.engage(user)
-    client = Strigil::StrigilClient.new(user)
+    client_config
+
+    puts "Initializing client..."
+    client = Strigil::StrigilClient.new(
+      username: @username,
+      password: @password,
+      browser: @browser,
+      target: user
+    )
+
+    puts "Initializing comments store..."
     comments = Strigil::Comments.new
 
+    puts "Beginning scrape. This may take a while."
     processing = true
     while processing == true
       comments.add_comments(client.pull_comments)
@@ -22,6 +33,27 @@ class Strigil
       end
     end
   end
+
+  private
+
+  def self.client_config
+    puts "Valid Reddit account details are neccessary to scrape correctly."
+    puts "This information is _not_ sent to any third party - it is simply"
+    puts "used to properly configure how user comments are displayed in"
+    puts "order to scrape them correctly. Feel free to use a throwaway."
+    puts "Username:"
+    print "> "
+    @username = gets.chomp
+    puts "Password:"
+    print "> "
+    @password = gets.chomp
+    puts "Do you have Chrome or Firefox installed?"
+    puts "Type either 'chrome' or 'firefox' without quotes."
+    @browser = gets.chomp
+  end
+end
+
+class ConfigurationError < StandardError
 end
 
 require 'strigil/comment'

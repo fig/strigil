@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name = "strigil"
-  s.version = '0.1.0'
+  s.version = '0.2.0'
+  s.date = '2018-04-07'
   s.license = 'MIT'
-  s.date = '2018-04-03'
 
   s.author = "Harry Stebbins"
   s.email = 'hcstebbins@gmail.com'
