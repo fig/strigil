@@ -1,62 +1,36 @@
-class Strigil
-  def self.engage(user)
-    client_config
+lib = File.expand_path("../strigil", __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-    puts "Initializing client..."
-    client = Strigil::StrigilClient.new(
-      username: @username,
-      password: @password,
-      browser: @browser,
-      target: user
-    )
-
-    puts "Initializing comments store..."
-    comments = Strigil::Comments.new
-
-    puts "Beginning scrape. This may take a while."
-    processing = true
-    while processing == true
-      comments.add_comments(client.pull_comments)
-
-      begin
-        client.iterate
-      rescue EndOfQueueError
-        processing = false
-
-        client.close
-        comments.save
-
-        puts "Pulled #{comments.log.size} comments."
-        puts "JSON data stored in ./data/comments.json"
-
-        comments.clear
-      end
-    end
+module Strigil
+  class << self
+    attr_accessor :configuration
   end
 
-  private
+  def self.configure
+    self.configuration ||= Configuration.new
+    yield(configuration)
+  end
 
-  def self.client_config
-    puts "Valid Reddit account details are neccessary to scrape correctly."
-    puts "This information is _not_ sent to any third party - it is simply"
-    puts "used to properly configure how user comments are displayed in"
-    puts "order to scrape them correctly. Feel free to use a throwaway."
-    puts "Username:"
-    print "> "
-    @username = gets.chomp
-    puts "Password:"
-    print "> "
-    @password = gets.chomp
-    puts "Do you have Chrome or Firefox installed?"
-    puts "Type either 'chrome' or 'firefox' without quotes."
-    @browser = gets.chomp
+  class Configuration
+    attr_accessor :reddit_username, :reddit_password
   end
 end
 
-class ConfigurationError < StandardError
-end
+require 'byebug'
 
-require 'strigil/comment'
-require 'strigil/comments'
-require 'strigil/comments_parser'
-require 'strigil/strigil_client'
+require 'archiver'
+require 'archivers/reddit_archiver'
+
+require 'archivers/entry'
+require 'archivers/entries/reddit_entry'
+
+require 'client'
+require 'clients/reddit_client'
+
+require 'item_collection'
+
+require 'item'
+require 'items/reddit_comment'
+
+require 'parser'
+require 'parsers/reddit_parser'
