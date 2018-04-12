@@ -7,10 +7,10 @@ module Strigil
       original_url = archiver.client.current_url
       entry  = find_real_entry(entry, archiver.client)
 
-      result = RedditComment.new(
-        id: get_id(entry),
+      result = RedditComment.create(
+        post_id: get_id(entry),
         username: get_username(entry),
-        timestamp: get_timestamp(entry),
+        posted_at: get_timestamp(entry),
         content: get_content(entry),
         permalink: get_permalink(entry)
       )
