@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_12_033957) do
+ActiveRecord::Schema.define(version: 2018_04_13_041953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,7 +23,8 @@ ActiveRecord::Schema.define(version: 2018_04_12_033957) do
     t.string "permalink"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["post_id"], name: "index_reddit_comments_on_post_id"
+    t.index ["permalink"], name: "index_reddit_comments_on_permalink", unique: true
+    t.index ["post_id"], name: "index_reddit_comments_on_post_id", unique: true
     t.index ["username"], name: "index_reddit_comments_on_username"
   end
 

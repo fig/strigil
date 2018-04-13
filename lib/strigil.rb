@@ -1,7 +1,5 @@
-lib = File.expand_path("../strigil", __FILE__)
+lib = File.expand_path('strigil', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-
-require 'active_record'
 
 module Strigil
   class << self
@@ -14,26 +12,27 @@ module Strigil
   end
 
   class Configuration
-    attr_accessor :reddit_username, :reddit_password
+    attr_accessor :user_agent, :reddit_username, :reddit_password, :redis_url
   end
 end
 
+require 'active_record'
 require 'byebug'
+require 'sidekiq'
 
-require 'archiver'
-require 'archivers/reddit_archiver'
+# -----------------------------
 
-require 'archivers/entry'
-require 'archivers/entries/reddit_entry'
+require 'web_client'
+require 'clients/reddit_web_client'
 
-require 'client'
-require 'clients/reddit_client'
-
-require 'item_collection'
+require 'controller'
+require 'controllers/reddit_controller'
 
 require 'models/reddit_comment'
 
-require 'parser'
-require 'parsers/reddit_parser'
+require 'worker'
+require 'workers/reddit_worker'
+
+# -----------------------------
 
 require './lib/strigil_initializer.rb'
